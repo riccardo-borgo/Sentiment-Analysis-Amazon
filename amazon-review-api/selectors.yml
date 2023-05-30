@@ -1,0 +1,43 @@
+product_title:
+    css: 'h1 a[data-hook="product-link"]'
+    xpath: null
+    type: Text
+reviews:
+    css: 'div.review div.a-section.celwidget'
+    xpath: null
+    multiple: true
+    type: Text
+    children:
+        title:
+            css: a.review-title
+            xpath: null
+            type: Text
+        content:
+            css: 'div.a-row.review-data span.review-text'
+            xpath: null
+            type: Text
+        date:
+            css: span.a-size-base.a-color-secondary
+            xpath: null
+            type: Text
+        rating:
+            css: 'div.a-row:nth-of-type(2) > a.a-link-normal:nth-of-type(1)'
+            xpath: null
+            type: Attribute
+            attribute: title
+        verified_purchase:
+            css: 'span[data-hook="avp-badge"]'
+            xpath: null
+            type: Text
+next_page:
+    css: 'li.a-last a'
+    xpath: null
+    type: Link
+average_rating:
+    css: 'span[data-hook="rating-out-of-text"]'
+    xpath: null
+    type: Text
+number_of_reviews:
+    css: 'div[data-hook="total-review-count"] span.a-size-base'
+    xpath: null
+    type: Text
