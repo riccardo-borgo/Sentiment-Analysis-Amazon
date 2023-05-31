@@ -40,8 +40,6 @@ def scrape(url):
             else:
                 r['verified_purchase'] = False
         r['rating'] = r['rating'].split(' out of')[0]
-        date_posted = r['date'].split('on ')[-1]
-        r['date'] = dateparser.parse(date_posted).strftime('%d %b %Y')
         reviews.append(r)
     data['url'] = url
     data['average_rating'] = float(data['average_rating'].split(' out')[0])
@@ -49,7 +47,7 @@ def scrape(url):
     data['number_of_reviews'] = data['number_of_reviews'].split()[0]
     data['number_of_reviews'] = data['number_of_reviews'].replace(',', '')
     data['number_of_reviews'] = int(data['number_of_reviews'])
-    return data 
+    return (data)
     
 @app.route('/')
 def api():
