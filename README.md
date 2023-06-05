@@ -218,7 +218,58 @@ After getting all the polarities of the titles and the bodies I decided to compu
 ```python
 total_polarity = []
 total_polarity = [round((i*0.2 + j*0.8)/2, 4) for i,j in zip(title_pol_mean, body_pol_mean)] 
+
+df['Polarity'] = total_polarity
 ```
+
+Then I assigned a value among "Bad", "Neutral" and "Good" according to the value of the polarity:
+
+```python
+list_polarity = []
+for i in range(len(df)):
+    if df['Polarity'][i] < 0:
+        list_polarity.append('Bad')
+    elif df['Polarity'][i] <= 0.15:
+        list_polarity.append('Neutral')
+    else:
+        list_polarity.append('Good')
+
+df['Polarity_Text'] = list_polarity
+
+df['Polarity_Text'].value_counts()
+```
+> Good       406<br>Bad         65<br>Neutral     39<br>Name: Polarity_Text, dtype: str
+
+Storing the new dataset into a new CSV file:
+
+```python
+df.to_csv('data_final.csv', index=False)
+```
+
+Now, the last part of the sentiment analysis is to create a proper dataframe to feed our models. Since the standard one with all the words couldn't be admissible since Machine Learning Models doesn't know how to interpret a certain word in order to classify a phrase I needed to map every review according to the word it has in it.
+
+To do so there is a particular module of ```sklearn.feature_extraction.text```, ```TfidfVectorizer ``` that allows us to create a dense matrix in order to see for every word a level of beloging to every review:
+
+```python
+df['Full Review'] = df.apply(lambda row: row['Title'] + ' ' + row['Body'], axis=1)
+
+vectorizer = TfidfVectorizer()
+vectors = vectorizer.fit_transform(df['Full Review'])
+feature_names = vectorizer.get_feature_names_out()
+matrix = vectors.todense()
+list_dense = matrix.tolist()
+sparse_matrix = pd.DataFrame(list_dense, columns=feature_names)
+
+sparse_matrix['Polarity_Text'] = list_polarity
+```
+
+## CODE - PART 3: MACHINE LEARNING MODELS
+For the last part of the code I applied some classifications models to my dataset. The one that I choose are:
+1. Näive Bayes Classiers
+2. Decision Tree
+3. Random Forest
+4. K-Neigherest Neighbors
+
 
 
 
