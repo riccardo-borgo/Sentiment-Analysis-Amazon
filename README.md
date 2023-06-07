@@ -322,12 +322,16 @@ y_pred = nb.predict(X_test)
 
 # Calculate the accuracy of the classifier
 accuracy_nb = accuracy_score(Y_test, y_pred)
+recall_nb = recall_score(Y_test, y_pred, average='micro')
+f1_score_nb = f1_score(Y_test, y_pred, average='micro')
 ```
-> Accuracy: 0.63
+> Accuracy: 0.63<br>Recall: 0.63<br>F1 Score: 0.63
 
-This one is the worst in terms of performance, given the semplicistics assumption under the model.
+This one is the worst in terms of performance, given the semplicistics assumption under the model. Given that I decided to compute the confusion matrxi in order to have a better comprehension of the classification the model made:
 
-3. Multinomial Bayes Classifiers
+![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/5a3387c2-2be8-4409-84fd-c67c2e6d8f2d)
+
+2. Multinomial Bayes Classifiers
 
 ```python
 fb = MultinomialNB()
@@ -339,12 +343,14 @@ y_pred = fb.predict(X_test)
 
 # Step 6: Evaluate the performance of the classifier
 accuracy_fb = accuracy_score(Y_test, y_pred)
+recall_fb = recall_score(Y_test, y_pred, average='micro')
+f1_score_fb = f1_score(Y_test, y_pred, average='micro')
 ```
-> Accuracy: 0.82
+> Accuracy: 0.82<br>Recall: 0.82<br>F1 Score: 0.82
 
 I thought could be interesting to compare the Näive Bayes with the Multinomial Bayes since the second works quite well with occurences of words within a text. Even though I don't have a dataset with occurences but with weights we can clearly see that the performance increased.
 
-5. Decision Tree
+3. Decision Tree
 
 ```python
 # Decision Tree
@@ -358,12 +364,18 @@ y_pred = dt.predict(X_test)
 
 # Calculate the accuracy of the classifier
 accuracy_dt = accuracy_score(Y_test, y_pred)
+recall_dt = recall_score(Y_test, y_pred, average='micro')
+f1_score_dt = f1_score(Y_test, y_pred, average='micro')
 ```
-> Accuracy: 0.94
+> Accuracy: 0.94<br>Recall: 0.95<br>F1 Score: 0.9500000000000001
 
-This is by far the best model. I used the Entropy method to split and the split decision as "best" in order to select the split with less entropy.
+This is by far the best model. I used the Entropy method to split and the split decision as "best" in order to select the split with less entropy. Also this time I computed the confusion matrix given that this is, by far, the best model.
 
-7. Random Forest
+![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/cb18d975-dbad-4037-84fb-40577fe95d9f)
+
+This is by far the best model. I used the Entropy method to split and the split decision as "best" in order to select the split with less entropy. Also this time I computed the confusion matrix given that this is, by far, the best model.
+
+4. Random Forest
 
 ```python
 ensemble_clfs = [
@@ -396,11 +408,11 @@ plt.legend(loc="upper right")
 plt.show()
 ```
 
-Implementing a Random Forest I thought It could be useful to check how many trees are the best choice to consstruct the Forest. In the code above I created a list of tuples containing "RandomForest Classifiers" string and as second element a tuple with the number of trees used and the OOB rate. Setting the attribute ```oob_score=True``` I can track every time the OOB score that store the error of a Random Forest. The last part of the code plot a line chart where on the x axes there is the number of trees (from 50 to 500 with a step of 10) and the y axes the OOB rate.
+Implementing a Random Forest I thought It could be useful to check how many trees are the best choice to construct the Forest. In the code above I created a list of tuples containing "RandomForest Classifiers" string and as second element a tuple with the number of trees used and the OOB rate. Setting the attribute ```oob_score=True``` I can track every time the OOB score that is the probability of predicting the Out Of Bag samples correctly. The last part of the code plot a line chart where on the x axes there is the number of trees (from 50 to 500 with a step of 10) and the y axes the OOB rate.
 
-![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/55d56113-c527-4a59-9d42-69e3e7a64b1c)
+![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/e6116f3a-c96e-4fab-a01d-3387788b5050)
 
-As we can see the number of trees with the lowest OOB rate are 400.
+As we can see the number of trees with the lowest OOB rate about 60.
 
 ```python
 # Random Forest
@@ -414,13 +426,31 @@ y_pred = rf.predict(X_test)
 
 # Calculate the accuracy of the classifier
 accuracy_rf = accuracy_score(Y_test, y_pred)
+recall_rf = recall_score(Y_test, y_pred, average='micro')
+f1_score_rf = f1_score(Y_test, y_pred, average='micro')
 ```
-> Accuracy: 0.84
+> Accuracy: 0.84<br>Recall: 0.84<br>F1 Score: 0.8399999999999999
 
-9. K-Neigherest Neighbors
+5. K-Neigherest Neighbors
 
+```python
+# Create a KNN classifier
+k = 10  # number of neighbors
+knn = KNeighborsClassifier(n_neighbors=k)
 
+# Train the classifier
+knn.fit(X_train, Y_train)
 
+# Make predictions on the test set
+y_pred = knn.predict(X_test)
+
+# Calculate the accuracy of the classifier
+accuracy_knn = accuracy_score(Y_test, y_pred)
+recall_knn = recall_score(Y_test, y_pred, average='micro')
+f1_score_knn = f1_score(Y_test, y_pred, average='micro')
+recall_knn = recall_score(Y_test, y_pred, average='micro')
+f1_score_knn = f1_score(Y_test, y_pred, average='micro')
+```
 
 
 
