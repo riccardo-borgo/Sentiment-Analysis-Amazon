@@ -111,9 +111,7 @@ Here there is a sample of the dataset I've just created:
 <img width="1468" alt="Screenshot 2023-06-09 alle 17 02 42" src="https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/e219ba6b-0862-4f30-9d4d-444f3dc1d4cb">
 
 ## CODE - PART 2: sentiment_analysis.ipynb
-Now It comes the interesting part. First of all I started with a very simple EDA with just few plots representing the most frequent words, in two ways: 
-1. With a barplot that represents the frequencies of the 10 most common words in titles and bodies;
-2. With a Word Plot: that is a special kind of frequency plot that shows the most used words bigger resepct to the others.
+Now It comes the interesting part. First of all I started with a very simple EDA with just few plots representing the most frequent words, with a barplot.
 
 To find the most common words I must **tokenize** every text. The first 4 lines of the code underneath do that. The second and the fourth, particularly, find all the **stopwords** in the text and delete them. The stopwords are words that are filtered out before, or after, the actual words in the text that carry the information. In fact, most stop words have no particular meaning when isolated from the text. Then, with the function ```.FreDist(string)``` I create a dictionary as per keys the word and as values the number of times that word occurs.
 
@@ -157,38 +155,6 @@ plt.bar(list(sorted_fd_body.keys())[:10], list(sorted_fd_body.values())[:10])
 plt.show()
 ```
 ![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/ea7395e1-2889-4374-98c1-38ac90bf67ff)
-
-Now It comes the Word plots. I decided to plot only the good and neutral ones, since bad reviews were basically equal (semantically talking) to the neutrals.
-
-```python
-positive_reviews = df[df['Stars'] >= 4]['Title']
-positive_reviews = ".".join(positive_reviews)
-
-wordcloud = WordCloud(background_color="white", max_words=len(positive_reviews))
-
-wordcloud.generate(positive_reviews)
-
-plt.figure(figsize=(15,8))
-plt.imshow(wordcloud, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-```
-![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/fb8d1574-7f6f-4084-933d-5ae6c4b29c0b)
-
-```python
-neutral_reviews = df[df['Stars'] == 3]['Title']
-neutral_reviews = ".".join(neutral_reviews)
-
-wordcloud = WordCloud(background_color="white", max_words=len(neutral_reviews))
-
-wordcloud.generate(neutral_reviews)
-
-plt.figure(figsize=(15,8))
-plt.imshow(wordcloud, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-```
-![image](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/a808f4e0-3592-4afe-a2e4-16847cd131c4)
 
 Now It's time to start classify the phrases as "Good", "Neutral" or "Bad". 
 
@@ -512,6 +478,28 @@ print("F1 Score:", f1_score_knn)
 ```
 > Accuracy: 0.80392<br>Recall: 0.803921568627451<br>F1 Score: 0.8039215686274509
 
+The last model I implemented is the Logistic Regression:
+
+```pyhton
+# Initialize the Logistic Regression model
+logreg = LogisticRegression(random_state=42)
+
+# Fit the model to the training data
+logreg.fit(X_train, Y_train)
+
+# Make predictions on the test data
+y_pred = logreg.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy_lr = accuracy_score(Y_test, y_pred)
+recall_lr = recall_score(Y_test, y_pred, average='micro')
+f1_score_lr = f1_score(Y_test, y_pred, average='micro')
+print("Accuracy:", accuracy_lr)
+print("Recall:", recall_lr)
+print("F1 Score:", f1_score_lr)
+```
+> Accuracy: 0.7549019607843137<br>Recall: 0.7549019607843137<br>F1 Score: 0.7549019607843137
+
 This is basically the end of the analysis. The last thing I did has been to store all the result in a dataFrame:
 
 ```python
@@ -521,7 +509,9 @@ results = pd.DataFrame({'Model Name' : ['Naive Bayes', 'Full Bayes' ,'Decision T
                                 'F1 Score' : [f1_score_nb, f1_score_fb, f1_score_dt, f1_score_rf, f1_score_knn]})
 ```
 
-<img width="354" alt="Screenshot 2023-06-09 alle 17 47 36" src="https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/9ef3dcf1-cc57-4457-b686-47de414e0cfe">
+![Screenshot 2023-06-10 alle 16 01 32](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/7e28e710-ac7b-4659-ad2c-e4fb1a4cf038)
+
+As you can see the most powerful model is the Random Forest, probably because it is also the most complex one and is able to grasp more information from the matrix respect to other models. 
 
 
 
