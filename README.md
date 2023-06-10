@@ -15,13 +15,13 @@ import re
 import time
 import matplotlib.pyplot as plt
 from collections import OrderedDict
-from wordcloud import WordCloud
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_models import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, recall_score, f1_score, confusion_matrix
