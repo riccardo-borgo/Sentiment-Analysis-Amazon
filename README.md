@@ -248,7 +248,7 @@ The matrix is created starting from the column "Full Review" I created above.
 
 Sparse Matrix:
 
-<img width="1313" alt="Screenshot 2023-06-06 alle 15 55 11" src="https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/ac0604ff-86ff-4e44-af91-c93ab980acbe">
+<img width="1303" alt="Screenshot 2023-06-10 alle 16 13 38" src="https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/fd653383-cb0d-45fa-a7f6-10cd5ce81f5f">
 
 It is difficult to show the complete result, since, as you can see the matrix has 2603 columns (all the words of all the different reviews) and 510 rows (all the different reviews).
 The different elements inside the matrix are a sort of weight every word has inside that specific review.
