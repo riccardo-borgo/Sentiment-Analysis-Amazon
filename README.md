@@ -14,6 +14,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 import re
 import time
 import matplotlib.pyplot as plt
+from matplotlib.cm import Blues
 from collections import OrderedDict
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -33,7 +34,7 @@ Then I delcared some variables I will use to store the different parts of the re
 review_title = []
 review_body = []
 review_stars = []
-i = 0
+i = 1
 ```
 
 The next cell include all the various steps of the scraping: 
@@ -53,20 +54,32 @@ headers = {
         'accept-language': 'it-IT,it;en-GB,en-US;q=0.9,en;q=0.8',
     }
 
-while i < 50:
-    time.sleep(3)
-    webpage = requests.get(URL, headers=headers)
-    soup = BeautifulSoup(webpage.content, 'html.parser')
-    review_title.append(soup.select('a.review-title'))
-    review_body.append(soup.select('div.a-row.review-data span.review-text'))
-    review_stars.append(soup.select('div.a-row:nth-of-type(2) > a.a-link-normal:nth-of-type(1)'))
+while i <= 50:
     try:
-        print(f'Scraping page {i}')
-        next_url = soup.select_one('li.a-last a').get('href')
-        URL = f"https://www.amazon.it{next_url}"
-        i += 1
-    except Exception as e:
-        print(f'An error occured {e}')
+        webpage = requests.get(URL, headers=headers)
+        # Process the response if the request was successful
+        if webpage.status_code == 200:
+            # Starting the scraping
+            soup = BeautifulSoup(webpage.content, 'html.parser')
+            print(f'Scraping page {i}')
+            review_title.append(soup.select('a.review-title')) # css selector for the title of the review
+            review_body.append(soup.select('div.a-row.review-data span.review-text')) # css selector for the body of the review
+            review_stars.append(soup.select('div.a-row:nth-of-type(2) > a.a-link-normal:nth-of-type(1)')) # css selector for the stars of the review
+            try:
+                next_link = soup.select_one('li.a-last a')
+                if next_link is not None:
+                    next_url = next_link.get('href')
+                    URL = f"https://www.amazon.it{next_url}"
+            except Exception as e:
+                print(f'An error occured {e}')
+        else:
+            # Handle the response if it's not successful
+            print(f"Request failed with status code: {webpage.status_code}")
+    except requests.RequestException as e:
+        # Handle any exceptions that occur during the request
+        print(f"An error occurred: {e}")
+    i += 1
+    time.sleep(2)
 ```
 
 After done that I will have three lists with all the titles, the bodies and the stars of the first 50 pages of amazon reviews with a total of 500 reviews.
@@ -248,9 +261,9 @@ The matrix is created starting from the column "Full Review" I created above.
 
 Sparse Matrix:
 
-<img width="1303" alt="Screenshot 2023-06-10 alle 16 13 38" src="https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/fd653383-cb0d-45fa-a7f6-10cd5ce81f5f">
+![Screenshot 2023-06-11 alle 20 08 33](https://github.com/riccardo-borgo/Sentiment-Analysis_Amazon/assets/51230348/b2481829-abb9-405e-b37a-15673cef7337)
 
-It is difficult to show the complete result, since, as you can see the matrix has 2603 columns (all the words of all the different reviews) and 510 rows (all the different reviews).
+It is difficult to show the complete result, since, as you can see the matrix has 2603 columns (all the words of all the different reviews) and 500 rows (all the different reviews).
 The different elements inside the matrix are a sort of weight every word has inside that specific review.
 
 The weight is calculated as: 
